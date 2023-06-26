@@ -23,6 +23,8 @@ class Command {
     bool is_unique;
 
    public:
+    Command();
+    ~Command();
     // 分析参数
     int parse_arg(int argc, char* argv[]);
     // 处理

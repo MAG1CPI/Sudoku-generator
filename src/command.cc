@@ -2,7 +2,23 @@
 #include <string.h>
 #include <iostream>
 #include "getopt.h"
+
 using namespace std;
+
+Command::Command() {
+    is_create = false;
+    is_solve = false;
+    is_generate = false;
+
+    // 额外选项的初始化
+    game_level = -1;
+    min_hole_num = -1;
+    max_hole_num = -1;
+    is_unique = false;
+}
+
+Command::~Command() {
+}
 
 int Command::parse_arg(int argc, char* argv[]) {
     char opt = 0;
@@ -20,7 +36,6 @@ int Command::parse_arg(int argc, char* argv[]) {
             case 's':
                 is_solve = true;
                 game_path = optarg;
-                cout << game_path;
                 // 文件是否可读的检查在solve里处理
                 break;
             case 'n':
@@ -94,7 +109,24 @@ void Command::handle() {
     // TODO
     return;
 }
+
 void Command::output() {
-    // TODO
-    return;
+    if (is_create) {
+        cout << "创建" << endgame_num << "个终局\n\n";
+    }
+    if (is_solve) {
+        cout << "求解路径为\"" << game_path << "\"的文件中的数独游戏\n\n";
+    }
+    if (is_generate) {
+        cout << "创建" << game_num << "个数独游戏\n";
+        if (game_level != -1) {
+            cout << "游戏难度为: " << game_level << endl;
+        }
+        if (min_hole_num != -1) {
+            cout << "挖空数量为: " << min_hole_num << " ~ " << max_hole_num << endl;
+        }
+        if (is_unique) {
+            cout << "游戏的解唯一" << endl;
+        }
+    }
 }
