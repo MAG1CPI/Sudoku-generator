@@ -1,13 +1,14 @@
-#ifndef _SUDOKU_H_
-#define _SUDOKU_H_
+// Copyright 2023 MAG1CPI
+#ifndef SUDOKU_H_
+#define SUDOKU_H_
 
 #include <string>
-#include "sudoku_board.h"
-
-using namespace std;
+#include <vector>
+#include <utility>
+#include "../include/sudoku_board.h"
 
 class Sudoku {
-   private:
+ private:
     SudokuBoard games;
     SudokuBoard result;
 
@@ -22,31 +23,31 @@ class Sudoku {
             block[(i / 3) * 3 + j / 3] ^= (1 << num);
         }
     } state;
-    vector<pair<int, int>> blanks;
+    std::vector<std::pair<int, int>> blanks;
 
-   public:
+ public:
     Sudoku();
     ~Sudoku();
 
     int gen_endgames(int num);
     int gen_games(int num, int level, int min_hole_num, int max_hole_num, bool is_unique);
-    int solve_games_and_save_results(string path);
-    int save_games(string path);
+    int solve_games_and_save_results(std::string path);
+    int save_games(std::string path);
 
-   private:
+ private:
     // 终局生成辅助函数
-    void gen_endgame(Board& board);
+    void gen_endgame(Board* board);
     void random_row_permutation(char* row);
-    void row_col_extend(Board& board, int x, int y, int is_row);
+    void row_col_extend(Board* board, int x, int y, int is_row);
 
     // 数独求解辅助函数
-    bool solve_game(Board& board, bool is_unique);
-    void init_state(Board& board);
-    bool solve_by_dfs(Board& board, int i, bool is_unique);
+    bool solve_game(Board* board, bool is_unique);
+    void init_state(Board* board);
+    bool solve_by_dfs(Board* board, int i, bool is_unique);
 
     // 数独生成辅助函数
-    void set_hole_num_range(int level, int& min_hole_num, int& max_hole_num);
-    bool dig_hole(Board& board, int hole, bool is_unique);
+    void set_hole_num_range(int level, int* min_hole_num, int* max_hole_num);
+    bool dig_hole(Board* board, int hole, bool is_unique);
 };
 
-#endif
+#endif  // SUDOKU_H_

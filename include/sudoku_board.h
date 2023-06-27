@@ -1,32 +1,30 @@
-#ifndef _SUDOKU_BOARD_H_
-#define _SUDOKU_BOARD_H_
+// Copyright 2023 MAG1CPI
+#ifndef SUDOKU_BOARD_H_
+#define SUDOKU_BOARD_H_
 
 #include <string>
 #include <vector>
-using namespace std;
 
-// typedef char Board[9][9];
-// typedef Board(*pBoard);
-typedef vector<vector<char>> Board;
+typedef std::vector<std::vector<char>> Board;
 
 class Sudoku;
 
 class SudokuBoard {
     friend class Sudoku;
 
-   private:
-    void print_board(Board& board);
+ private:
+    void print_board(const Board& board);
 
-   private:
-    vector<Board> boards;
+ private:
+    std::vector<Board> boards;
 
-   public:
+ public:
     SudokuBoard();
     ~SudokuBoard();
 
-    int load(string path);
-    int save(string path);
+    int load(std::string path);
+    int save(std::string path);
     void output();
 };
 
-#endif
+#endif  // SUDOKU_BOARD_H_

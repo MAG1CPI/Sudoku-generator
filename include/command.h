@@ -1,18 +1,18 @@
-#ifndef _COMMAND_H_
-#define _COMMAND_H_
+// Copyright 2023 MAG1CPI
+#ifndef COMMAND_H_
+#define COMMAND_H_
 
 #include <string>
-using namespace std;
 
 class Command {
-   private:
+ private:
     // 数独终局
     bool is_create;
     int endgame_num;
 
     // 数独求解
     bool is_solve;
-    string game_path;
+    std::string game_path;
 
     // 数独游戏
     int is_generate;
@@ -22,7 +22,7 @@ class Command {
     int max_hole_num;
     bool is_unique;
 
-   public:
+ public:
     Command();
     ~Command();
     // 分析参数
@@ -33,4 +33,4 @@ class Command {
     void output();
 };
 
-#endif
+#endif  // COMMAND_H_

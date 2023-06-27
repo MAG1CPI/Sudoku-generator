@@ -1,8 +1,8 @@
-#include "sudoku_board.h"
+// Copyright 2023 MAG1CPI
 #include <cstring>
 #include <fstream>
 #include <iostream>
-using namespace std;
+#include "../include/sudoku_board.h"
 
 static const char kSeparation[] = "-----------------";
 
@@ -13,11 +13,11 @@ SudokuBoard::SudokuBoard() {
 SudokuBoard::~SudokuBoard() {
 }
 
-int SudokuBoard::load(string path) {
-    ifstream infile;
+int SudokuBoard::load(std::string path) {
+    std::ifstream infile;
     infile.open(path);
     if (!infile.is_open()) {
-        cout << "无法打开文件!" << endl;
+        std::cout << "无法打开文件!\n";
         exit(-1);
     }
 
@@ -25,7 +25,7 @@ int SudokuBoard::load(string path) {
 
     char line[128];
     Board board;
-    vector<char> row;
+    std::vector<char> row;
     while (!infile.eof()) {
         infile.getline(line, 128);
         if (line[0] == '-') {
@@ -46,11 +46,11 @@ int SudokuBoard::load(string path) {
     return 0;
 }
 
-int SudokuBoard::save(string path) {
-    ofstream outfile;
+int SudokuBoard::save(std::string path) {
+    std::ofstream outfile;
     outfile.open(path);
     if (!outfile.is_open()) {
-        cout << "无法打开文件!" << endl;
+        std::cout << "无法打开文件!\n";
         exit(-1);
     }
 
@@ -59,7 +59,7 @@ int SudokuBoard::save(string path) {
             for (int j = 0; j < 9; j++) {
                 outfile << boards[k][i][j] << " ";
             }
-            outfile << endl;
+            outfile << "\n";
         }
         outfile << kSeparation << "board[" << k + 1 << "]\n";
     }
@@ -72,19 +72,19 @@ void SudokuBoard::output() {
     for (int k = 0; k < boards.size(); k++) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                cout << boards[k][i][j] << " ";
+                std::cout << boards[k][i][j] << " ";
             }
-            cout << endl;
+            std::cout << "\n";
         }
-        cout << kSeparation << "board[" << k + 1 << "]\n";
+        std::cout << kSeparation << "board[" << k + 1 << "]\n";
     }
 }
 
-void SudokuBoard::print_board(Board& board) {
+void SudokuBoard::print_board(const Board& board) {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
-            cout << board[i][j] << " ";
+            std::cout << board[i][j] << " ";
         }
-        cout << endl;
+        std::cout << "\n";
     }
 }
