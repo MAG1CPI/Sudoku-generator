@@ -2,6 +2,7 @@
 #include <string.h>
 #include <iostream>
 #include "getopt.h"
+#include "sudoku.h"
 
 using namespace std;
 
@@ -106,8 +107,22 @@ int Command::parse_arg(int argc, char* argv[]) {
 }
 
 void Command::handle() {
-    // TODO
-    return;
+    if (is_create) {
+        Sudoku sudoku;
+        sudoku.gen_endgame(endgame_num);
+        sudoku.save_board("./endgame.txt");
+    }
+    if (is_solve) {
+        cout << "1\n";
+        Sudoku sudoku;
+        sudoku.solve(game_path);
+        sudoku.save_board("./solve.txt");
+    }
+    if (is_generate) {
+        Sudoku sudoku;
+        sudoku.gen_game(game_num, game_level, min_hole_num, max_hole_num, is_unique);
+        sudoku.save_board("./game.txt");
+    }
 }
 
 void Command::output() {
