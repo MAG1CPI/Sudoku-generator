@@ -109,18 +109,16 @@ int Command::parse_arg(int argc, char* argv[]) {
 void Command::handle() {
     if (is_create) {
         Sudoku sudoku;
-        sudoku.gen_endgame(endgame_num);
+        sudoku.gen_endgames(endgame_num);
         sudoku.save_board("./endgame.txt");
     }
     if (is_solve) {
-        cout << "1\n";
         Sudoku sudoku;
-        sudoku.solve(game_path);
-        sudoku.save_board("./solve.txt");
+        sudoku.solve_games(game_path);
     }
     if (is_generate) {
         Sudoku sudoku;
-        sudoku.gen_game(game_num, game_level, min_hole_num, max_hole_num, is_unique);
+        sudoku.gen_games(game_num, game_level, min_hole_num, max_hole_num, is_unique);
         sudoku.save_board("./game.txt");
     }
 }

@@ -28,8 +28,9 @@ int SudokuBoard::load(string path) {
     vector<char> row;
     while (!infile.eof()) {
         infile.getline(line, 128);
-        if (strcmp(line, kSeparation)) {
+        if (line[0] == '-') {
             boards.push_back(board);
+            board.clear();
         } else {
             row.clear();
             for (int i = 0; i < 128; i++) {

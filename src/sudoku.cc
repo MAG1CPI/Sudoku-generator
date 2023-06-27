@@ -1,5 +1,6 @@
 #include "sudoku.h"
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 using namespace std;
 
@@ -9,39 +10,55 @@ Sudoku::Sudoku() {
 Sudoku::~Sudoku() {
 }
 
-int Sudoku::gen_endgame(int num) {
-    Board board(9, vector<char>(9, '$'));
-    char row[9];
-
+int Sudoku::gen_endgames(int num) {
     for (int i = 0; i < num; i++) {
-        random_row_permutation(row);
-        for (int i = 0; i < 3; i++) {
-            board[3][i + 3] = row[i] + '1';
-            board[4][i + 3] = row[i + 3] + '1';
-            board[5][i + 3] = row[i + 6] + '1';
-        }
-        row_col_extend(board, 3, 3, true);
-        row_col_extend(board, 3, 3, false);
-        row_col_extend(board, 3, 0, false);
-        row_col_extend(board, 3, 6, false);
+        Board board(9, vector<char>(9, '$'));
+        gen_endgame(board);
         game.boards.push_back(board);
     }
     game.output();
     return 0;
 }
 
-int Sudoku::gen_game(int num, int level, int min_hole, int max_hole, bool is_unique) {
+int Sudoku::gen_games(int num, int level, int min_hole, int max_hole, bool is_unique) {
     // TODO
     return 0;
 }
 
-int Sudoku::solve(string path) {
-    // TODO
+int Sudoku::solve_games(string path) {
+    game.load(path);
+    game.output();
+    int i = 1;
+    for (Board board : game.boards) {
+        solve_game(board);
+
+        string file_name = "board" + to_string(i) + "'s results.txt";
+        result.save(file_name);
+
+        cout << "----result of board[" << i << "]----\n";
+        result.output();
+        i++;
+    }
+    // game.output();
     return 0;
 }
 
 void Sudoku::save_board(string path) {
     game.save(path);
+}
+
+void Sudoku::gen_endgame(Board& board) {
+    char row[9];
+    random_row_permutation(row);
+    for (int i = 0; i < 3; i++) {
+        board[3][i + 3] = row[i] + '1';
+        board[4][i + 3] = row[i + 3] + '1';
+        board[5][i + 3] = row[i + 6] + '1';
+    }
+    row_col_extend(board, 3, 3, true);
+    row_col_extend(board, 3, 3, false);
+    row_col_extend(board, 3, 0, false);
+    row_col_extend(board, 3, 6, false);
 }
 
 void Sudoku::random_row_permutation(char* row) {
@@ -81,4 +98,47 @@ void Sudoku::row_col_extend(Board& board, int x, int y, int is_row) {
             board[i + 6][y + 2] = board[x + i][y + order_second[2]];
         }
     }
+}
+
+void Sudoku::solve_game(Board& board) {
+    init_state(board);
+    solve_by_dfs(board, 0);
+}
+
+void Sudoku::init_state(Board& board) {
+    memset(&state, 0, sizeof(state));
+    blanks.clear();
+    result.boards.clear();
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (board[i][j] == '$') {
+                blanks.push_back(pair<int, int>(i, j));
+            } else {
+                int n = board[i][j] - '1';
+                state.flip(i, j, n);
+            }
+        }
+    }
+}
+
+void Sudoku::solve_by_dfs(Board& board, int i) {
+    if (i == blanks.size()) {
+        result.boards.push_back(board);
+        return;
+    }
+
+    int x = blanks[i].first, y = blanks[i].second;
+
+    int mask = state.row[x] | state.col[y] | state.block[(x / 3) * 3 + y / 3];
+
+    for (int num = 0; num < 9; num++) {
+        if ((mask & (1 << num)) == 0) {
+            state.flip(x, y, num);
+            board[x][y] = num + '1';
+            solve_by_dfs(board, i + 1);
+            state.flip(x, y, num);
+        }
+    }
+    board[x][y] = '$';
 }
