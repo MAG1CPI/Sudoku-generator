@@ -49,6 +49,10 @@ int SudokuBoard::load(string path) {
 int SudokuBoard::save(string path) {
     ofstream outfile;
     outfile.open(path);
+    if (!outfile.is_open()) {
+        cout << "无法打开文件!" << endl;
+        exit(-1);
+    }
 
     for (int k = 0; k < boards.size(); k++) {
         for (int i = 0; i < 9; i++) {
@@ -57,14 +61,14 @@ int SudokuBoard::save(string path) {
             }
             outfile << endl;
         }
-        outfile << kSeparation << endl;  // << "board[" << k + 1 << "]\n";
+        outfile << kSeparation << "board[" << k + 1 << "]\n";
     }
 
     outfile.close();
     return 0;
 }
 
-int SudokuBoard::output() {
+void SudokuBoard::output() {
     for (int k = 0; k < boards.size(); k++) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -74,6 +78,13 @@ int SudokuBoard::output() {
         }
         cout << kSeparation << "board[" << k + 1 << "]\n";
     }
+}
 
-    return 0;
+void SudokuBoard::print_board(Board& board) {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
 }

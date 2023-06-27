@@ -1,4 +1,5 @@
 #include "sudoku.h"
+#include <assert.h>
 #include <algorithm>
 #include <cstring>
 #include <iostream>
@@ -14,23 +15,37 @@ int Sudoku::gen_endgames(int num) {
     for (int i = 0; i < num; i++) {
         Board board(9, vector<char>(9, '$'));
         gen_endgame(board);
-        game.boards.push_back(board);
+        games.boards.push_back(board);
     }
-    game.output();
+    games.output();
     return 0;
 }
 
-int Sudoku::gen_games(int num, int level, int min_hole, int max_hole, bool is_unique) {
-    // TODO
+int Sudoku::gen_games(int num, int level, int min_hole_num, int max_hole_num, bool is_unique) {
+    set_hole_num_range(level, min_hole_num, max_hole_num);
+    while (num > 0) {
+        Board board(9, vector<char>(9, '$'));
+        gen_endgame(board);
+
+        // 挖洞
+        int hole = min_hole_num + rand() % (max_hole_num - min_hole_num + 1);
+        if (dig_hole(board, hole, is_unique) == false) {
+            continue;
+        }
+
+        games.boards.push_back(board);
+        num--;
+    }
+    games.output();
     return 0;
 }
 
-int Sudoku::solve_games(string path) {
-    game.load(path);
-    game.output();
+int Sudoku::solve_games_and_save_results(string path) {
+    games.load(path);
+    games.output();
     int i = 1;
-    for (Board board : game.boards) {
-        solve_game(board);
+    for (Board board : games.boards) {
+        solve_game(board, false);
 
         string file_name = "board" + to_string(i) + "'s results.txt";
         result.save(file_name);
@@ -39,12 +54,12 @@ int Sudoku::solve_games(string path) {
         result.output();
         i++;
     }
-    // game.output();
+    // games.output();
     return 0;
 }
 
-void Sudoku::save_board(string path) {
-    game.save(path);
+int Sudoku::save_games(string path) {
+    return games.save(path);
 }
 
 void Sudoku::gen_endgame(Board& board) {
@@ -76,33 +91,33 @@ void Sudoku::random_row_permutation(char* row) {
 }
 
 void Sudoku::row_col_extend(Board& board, int x, int y, int is_row) {
-    int order_first[3] = {1, 2, 0};
-    int order_second[3] = {2, 0, 1};
+    int order1[3] = {1, 2, 0};
+    int order2[3] = {2, 0, 1};
     if (rand() % 2) {
-        swap(order_first, order_second);
+        swap(order1, order2);
     }
     for (int i = 0; i < 3; i++) {
         if (is_row) {
-            board[x][i] = board[x + order_first[0]][y + i];
-            board[x + 1][i] = board[x + order_first[1]][y + i];
-            board[x + 2][i] = board[x + order_first[2]][y + i];
-            board[x][i + 6] = board[x + order_second[0]][y + i];
-            board[x + 1][i + 6] = board[x + order_second[1]][y + i];
-            board[x + 2][i + 6] = board[x + order_second[2]][y + i];
+            board[x][i] = board[x + order1[0]][y + i];
+            board[x + 1][i] = board[x + order1[1]][y + i];
+            board[x + 2][i] = board[x + order1[2]][y + i];
+            board[x][i + 6] = board[x + order2[0]][y + i];
+            board[x + 1][i + 6] = board[x + order2[1]][y + i];
+            board[x + 2][i + 6] = board[x + order2[2]][y + i];
         } else {
-            board[i][y] = board[x + i][y + order_first[0]];
-            board[i][y + 1] = board[x + i][y + order_first[1]];
-            board[i][y + 2] = board[x + i][y + order_first[2]];
-            board[i + 6][y] = board[x + i][y + order_second[0]];
-            board[i + 6][y + 1] = board[x + i][y + order_second[1]];
-            board[i + 6][y + 2] = board[x + i][y + order_second[2]];
+            board[i][y] = board[x + i][y + order1[0]];
+            board[i][y + 1] = board[x + i][y + order1[1]];
+            board[i][y + 2] = board[x + i][y + order1[2]];
+            board[i + 6][y] = board[x + i][y + order2[0]];
+            board[i + 6][y + 1] = board[x + i][y + order2[1]];
+            board[i + 6][y + 2] = board[x + i][y + order2[2]];
         }
     }
 }
 
-void Sudoku::solve_game(Board& board) {
+bool Sudoku::solve_game(Board& board, bool is_unique) {
     init_state(board);
-    solve_by_dfs(board, 0);
+    return solve_by_dfs(board, 0, is_unique);
 }
 
 void Sudoku::init_state(Board& board) {
@@ -122,10 +137,14 @@ void Sudoku::init_state(Board& board) {
     }
 }
 
-void Sudoku::solve_by_dfs(Board& board, int i) {
+bool Sudoku::solve_by_dfs(Board& board, int i, bool is_unique) {
     if (i == blanks.size()) {
         result.boards.push_back(board);
-        return;
+        if (is_unique && result.boards.size() > 1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     int x = blanks[i].first, y = blanks[i].second;
@@ -136,9 +155,66 @@ void Sudoku::solve_by_dfs(Board& board, int i) {
         if ((mask & (1 << num)) == 0) {
             state.flip(x, y, num);
             board[x][y] = num + '1';
-            solve_by_dfs(board, i + 1);
+            if (solve_by_dfs(board, i + 1, is_unique) == false) {
+                state.flip(x, y, num);
+                board[x][y] = '$';
+                return false;
+            }
             state.flip(x, y, num);
         }
     }
     board[x][y] = '$';
+    return true;
+}
+
+void Sudoku::set_hole_num_range(int level, int& min_hole_num, int& max_hole_num) {
+    if (level != -1) {  // 存在 -m 选项则以 -m 选项为主
+        switch (level) {
+            case 1:
+                min_hole_num = 20;
+                max_hole_num = 30;
+                break;
+            case 2:
+                min_hole_num = 30;
+                max_hole_num = 40;
+                break;
+            case 3:
+                min_hole_num = 40;
+                max_hole_num = 55;
+                break;
+            default:
+                min_hole_num = 20;
+                max_hole_num = 55;
+                break;
+        }
+    } else if (min_hole_num == -1) {  // 既没有 -m 选项也没有 -r 选项则完全随机挖洞
+        min_hole_num = 20;
+        max_hole_num = 55;
+    }
+}
+
+bool Sudoku::dig_hole(Board& board, int hole_num, bool is_unique) {
+    int count = 0;  // 记录错误次数，过高则重新生成基础图
+    while (hole_num > 0) {
+        int x = rand() % 9;
+        int y = rand() % 9;
+        if (board[x][y] == '$')
+            continue;
+        char temp = board[x][y];
+        board[x][y] = '$';
+        if (is_unique) {
+            if (solve_game(board, is_unique) == true && result.boards.size() == 1) {
+                hole_num--;
+                count = 0;
+            } else {
+                board[x][y] = temp;
+                if (count++ > 20) {
+                    return false;
+                }
+            }
+        } else {
+            hole_num--;
+        }
+    }
+    return true;
 }

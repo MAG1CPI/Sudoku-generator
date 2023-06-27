@@ -8,8 +8,10 @@ using namespace std;
 
 class Sudoku {
    private:
-    SudokuBoard game;
+    SudokuBoard games;
+    SudokuBoard result;
 
+    // 数独求解辅助数据结构
     struct State {
         int row[9];
         int col[9];
@@ -21,25 +23,30 @@ class Sudoku {
         }
     } state;
     vector<pair<int, int>> blanks;
-    SudokuBoard result;
 
    public:
     Sudoku();
     ~Sudoku();
 
     int gen_endgames(int num);
-    int gen_games(int num, int level, int min_hole, int max_hole, bool is_unique);
-    int solve_games(string path);
-    void save_board(string path);
+    int gen_games(int num, int level, int min_hole_num, int max_hole_num, bool is_unique);
+    int solve_games_and_save_results(string path);
+    int save_games(string path);
 
    private:
+    // 终局生成辅助函数
     void gen_endgame(Board& board);
     void random_row_permutation(char* row);
     void row_col_extend(Board& board, int x, int y, int is_row);
 
-    void solve_game(Board& board);
+    // 数独求解辅助函数
+    bool solve_game(Board& board, bool is_unique);
     void init_state(Board& board);
-    void solve_by_dfs(Board& board, int i);
+    bool solve_by_dfs(Board& board, int i, bool is_unique);
+
+    // 数独生成辅助函数
+    void set_hole_num_range(int level, int& min_hole_num, int& max_hole_num);
+    bool dig_hole(Board& board, int hole, bool is_unique);
 };
 
 #endif

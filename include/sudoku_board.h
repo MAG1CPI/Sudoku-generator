@@ -15,6 +15,9 @@ class SudokuBoard {
     friend class Sudoku;
 
    private:
+    void print_board(Board& board);
+
+   private:
     vector<Board> boards;
 
    public:
@@ -23,7 +26,7 @@ class SudokuBoard {
 
     int load(string path);
     int save(string path);
-    int output();
+    void output();
 };
 
 #endif
