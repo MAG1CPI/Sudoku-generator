@@ -33,3 +33,7 @@
 
 # 
 task-requirements.md
+*.txt
+
+./picture/*.drawio
+./.vscode/c_cpp_properties.json
