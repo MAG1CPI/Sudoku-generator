@@ -1,6 +1,6 @@
 // Copyright 2023 MAG1CPI
-#ifndef SUDOKU_BOARD_H_
-#define SUDOKU_BOARD_H_
+#ifndef INCLUDE_SUDOKU_BOARD_H_
+#define INCLUDE_SUDOKU_BOARD_H_
 
 #include <string>
 #include <vector>
@@ -27,4 +27,4 @@ class SudokuBoard {
     void output();
 };
 
-#endif  // SUDOKU_BOARD_H_
+#endif  // INCLUDE_SUDOKU_BOARD_H_

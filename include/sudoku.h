@@ -1,6 +1,6 @@
 // Copyright 2023 MAG1CPI
-#ifndef SUDOKU_H_
-#define SUDOKU_H_
+#ifndef INCLUDE_SUDOKU_H_
+#define INCLUDE_SUDOKU_H_
 
 #include <string>
 #include <vector>
@@ -50,4 +50,4 @@ class Sudoku {
     bool dig_hole(Board* board, int hole, bool is_unique);
 };
 
-#endif  // SUDOKU_H_
+#endif  // INCLUDE_SUDOKU_H_

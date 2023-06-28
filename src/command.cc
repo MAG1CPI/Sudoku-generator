@@ -15,6 +15,8 @@ Command::Command() {
     is_solve = false;
     is_generate = false;
 
+    endgame_num = 0;
+    game_num = 0;
     // 额外选项的初始化
     game_level = -1;
     min_hole_num = -1;
