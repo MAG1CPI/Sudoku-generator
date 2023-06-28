@@ -1,6 +1,6 @@
 // Copyright 2023 MAG1CPI
-#ifndef COMMAND_H_
-#define COMMAND_H_
+#ifndef INCLUDE_COMMAND_H_
+#define INCLUDE_COMMAND_H_
 
 #include <string>
 
@@ -33,4 +33,4 @@ class Command {
     void output();
 };
 
-#endif  // COMMAND_H_
+#endif  // INCLUDE_COMMAND_H_

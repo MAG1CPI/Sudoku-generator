@@ -15,6 +15,8 @@ Command::Command() {
     is_solve = false;
     is_generate = false;
 
+    endgame_num = 0;
+    game_num = 0;
     // 额外选项的初始化
     game_level = -1;
     min_hole_num = -1;
@@ -65,21 +67,21 @@ int Command::parse_arg(int argc, char* argv[]) {
                 char* str;
                 str = strtok_s(optarg, "~", &pTmp);
                 if (str == NULL || is_number(str) == false) {
-                    std::cout << "选项 -m 挖空范围需要一个范围参数(eg: 20~55)!\n";
+                    std::cout << "选项 -r 挖空范围需要一个范围参数(eg: 20~55)!\n";
                     return -1;
                 }
                 min_hole_num = atoi(str);
 
                 str = strtok_s(NULL, "~", &pTmp);
                 if (str == NULL || is_number(str) == false) {
-                    std::cout << "选项 -m 挖空范围需要一个范围参数(eg: 20~55)!\n";
+                    std::cout << "选项 -r 挖空范围需要一个范围参数(eg: 20~55)!\n";
                     return -1;
                 }
                 max_hole_num = atoi(str);
 
                 str = strtok_s(NULL, "~", &pTmp);
                 if (str) {
-                    std::cout << "选项 -m 挖空范围需要一个范围参数(eg: 20~55)!\n";
+                    std::cout << "选项 -r 挖空范围需要一个范围参数(eg: 20~55)!\n";
                     return -1;
                 }
 
@@ -100,6 +102,10 @@ int Command::parse_arg(int argc, char* argv[]) {
                 return -1;
         }
     }
+    if (optind < argc) {
+        std::cout << "参数错误！请输入合法参数!\n";
+        return -1;
+    }
 
     if (is_generate == false && mask_mru) {
         std::cout << "选项 -m , -r , -u 必须和选项 -n 一同使用!\n";
@@ -108,10 +114,6 @@ int Command::parse_arg(int argc, char* argv[]) {
         std::cout << "选项 -m 和选项 -r 同时出现，以 -m 为主!\n";
     }
 
-    if (optind < argc) {
-        std::cout << "参数错误！请输入合法参数!\n";
-        return -1;
-    }
     return 0;
 }
 
