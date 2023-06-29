@@ -10,6 +10,7 @@
 #include "../include/sudoku.h"
 
 Sudoku::Sudoku() {
+    memset(&state, 0, sizeof(state));
 }
 
 Sudoku::~Sudoku() {
