@@ -28,15 +28,34 @@ int SudokuBoard::load(std::string path) {
     std::vector<char> row;
     while (!infile.eof()) {
         infile.getline(line, 128);
+        int len = strlen(line);
+        if (len == 0) {
+            continue;
+        }
         if (line[0] == '-') {
+            if (board.size() != 9) {
+                std::cout << "读取文件错误, 请确保数独游戏符合格式!\n";
+                infile.close();
+                exit(-1);
+            }
             boards.push_back(board);
             board.clear();
         } else {
             row.clear();
-            for (int i = 0; i < 128; i++) {
+            for (int i = 0; i != len; i++) {
                 if (line[i] != ' ') {
+                    if (line[i] != '$' && (line[i] < '1' || line[i] > '9')) {
+                        std::cout << "读取到非法字符, 请确保数独游戏符合格式!\n";
+                        infile.close();
+                        exit(-1);
+                    }
                     row.push_back(line[i]);
                 }
+            }
+            if (row.size() != 9) {
+                std::cout << "读取文件错误, 请确保数独游戏符合格式!\n";
+                infile.close();
+                exit(-1);
             }
             board.push_back(row);
         }
