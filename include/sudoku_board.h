@@ -13,9 +13,6 @@ class SudokuBoard {
     friend class Sudoku;
 
  private:
-    void print_board(const Board& board);
-
- private:
     std::vector<Board> boards;
 
  public:

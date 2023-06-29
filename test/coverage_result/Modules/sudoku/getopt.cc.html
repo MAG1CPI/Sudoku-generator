@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>getopt.cc</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+ï»¿/*
+ * getopt - POSIX like getopt for Windows console Application
+ *
+ * win-c - Windows Console Library
+ * Copyright (c) 2015 Koji Takami
+ * Released under the MIT license
+ * https://github.com/takamin/win-c/blob/master/LICENSE
+ */
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include "../include/getopt.h"
+
+char* optarg = 0;
+int optind = 1;
+int opterr = 1;
+int optopt = 0;
+
+int postpone_count = 0;
+int nextchar = 0;
+
+<span style = "background-color:#fdd">static void postpone(int argc, char* const argv[], int index) {
+    char** nc_argv = (char**)argv;  // NOLINT
+    char* p = nc_argv[index];
+    int j = index;
+    for (; j &lt; argc - 1; j++) {
+        nc_argv[j] = nc_argv[j + 1];
+    }
+    nc_argv[argc - 1] = p;
+}
+static int postpone_noopt(int argc, char* const argv[], int index) {
+    int i = index;
+    for (; i &lt; argc; i++) {
+        if (*(argv[i]) == '-') {
+            postpone(argc, argv, index);
+            return 1;</span>
+        }
+<span style = "background-color:#fdd">    }
+    return 0;
+}</span>
+static int _getopt_(int argc, char* const argv[],
+        const char* optstring,
+<span style = "background-color:#dfd">        const struct option* longopts, int* longindex) {
+    while (1) {</span>
+        int c;
+<span style = "background-color:#dfd">        const char* optptr = 0;
+        if (optind &gt;= argc - postpone_count) {
+            c = 0;
+            optarg = 0;
+            break;</span>
+        }
+<span style = "background-color:#dfd">        c = *(argv[optind] + nextchar);
+        if (c == '\0') {</span>
+<span style = "background-color:#fdd">            nextchar = 0;
+            ++optind;
+            continue;</span>
+        }
+<span style = "background-color:#dfd">        if (nextchar == 0) {
+            if (optstring[0] != '+' &amp;&amp; optstring[0] != '-') {
+                while (c != '-') {</span>
+                    /* postpone non-opt parameter */
+<span style = "background-color:#fdd">                    if (!postpone_noopt(argc, argv, optind)) {
+                        break; /* all args are non-opt param */</span>
+                    }
+<span style = "background-color:#fdd">                    ++postpone_count;
+                    c = *argv[optind];
+                }</span>
+            }
+<span style = "background-color:#dfd">            if (c != '-') {</span>
+<span style = "background-color:#fdd">                if (optstring[0] == '-') {
+                    optarg = argv[optind];
+                    nextchar = 0;
+                    ++optind;
+                    return 1;</span>
+                }
+<span style = "background-color:#fdd">                break;
+            } else {</span>
+<span style = "background-color:#dfd">                if (strcmp(argv[optind], "--") == 0) {</span>
+<span style = "background-color:#fdd">                    optind++;
+                    break;</span>
+                }
+<span style = "background-color:#dfd">                ++nextchar;
+                if (longopts != 0 &amp;&amp; *(argv[optind] + 1) == '-') {</span>
+<span style = "background-color:#fdd">                    char const* spec_long = argv[optind] + 2;
+                    char const* pos_eq = strchr(spec_long, '=');
+                    int spec_len = (pos_eq == NULL ? strlen(spec_long) : pos_eq - spec_long);
+                    int index_search = 0;
+                    int index_found = -1;
+                    const struct option* optdef = 0;
+                    while (longopts-&gt;name != 0) {
+                        if (strncmp(spec_long, longopts-&gt;name, spec_len) == 0) {
+                            if (optdef != 0) {
+                                if (opterr) {
+                                    fprintf(stderr, "ambiguous option: %s\n", spec_long);</span>
+                                }
+<span style = "background-color:#fdd">                                return '?';</span>
+                            }
+<span style = "background-color:#fdd">                            optdef = longopts;
+                            index_found = index_search;</span>
+                        }
+<span style = "background-color:#fdd">                        longopts++;
+                        index_search++;
+                    }
+                    if (optdef == 0) {
+                        if (opterr) {
+                            fprintf(stderr, "no such a option: %s\n", spec_long);</span>
+                        }
+<span style = "background-color:#fdd">                        return '?';</span>
+                    }
+<span style = "background-color:#fdd">                    switch (optdef-&gt;has_arg) {</span>
+                        case no_argument:
+<span style = "background-color:#fdd">                            optarg = 0;
+                            if (pos_eq != 0) {
+                                if (opterr) {
+                                    fprintf(stderr, "no argument for %s\n", optdef-&gt;name);</span>
+                                }
+<span style = "background-color:#fdd">                                return '?';</span>
+                            }
+<span style = "background-color:#fdd">                            break;</span>
+                        case required_argument:
+<span style = "background-color:#fdd">                            if (pos_eq == NULL) {
+                                ++optind;
+                                optarg = argv[optind];
+                            } else {
+                                optarg = (char*)pos_eq + 1;  // NOLINT</span>
+                            }
+                            break;
+                    }
+<span style = "background-color:#fdd">                    ++optind;
+                    nextchar = 0;
+                    if (longindex != 0) {
+                        *longindex = index_found;</span>
+                    }
+<span style = "background-color:#fdd">                    if (optdef-&gt;flag != 0) {
+                        *optdef-&gt;flag = optdef-&gt;val;
+                        return 0;</span>
+                    }
+<span style = "background-color:#fdd">                    return optdef-&gt;val;</span>
+                }
+<span style = "background-color:#dfd">                continue;</span>
+            }
+        }
+<span style = "background-color:#dfd">        optptr = strchr(optstring, c);
+        if (optptr == NULL) {
+            optopt = c;
+            if (opterr) {
+                fprintf(stderr,</span>
+                        "%s: invalid option -- %c\n",
+                        argv[0], c);
+            }
+<span style = "background-color:#dfd">            ++nextchar;
+            return '?';</span>
+        }
+<span style = "background-color:#dfd">        if (*(optptr+1) != ':') {
+            nextchar++;
+            if (*(argv[optind] + nextchar) == '\0') {
+                ++optind;
+                nextchar = 0;</span>
+            }
+<span style = "background-color:#dfd">            optarg = 0;
+        } else {
+            nextchar++;
+            if (*(argv[optind] + nextchar) != '\0') {</span>
+<span style = "background-color:#fdd">                optarg = argv[optind] + nextchar;
+            } else {</span>
+<span style = "background-color:#dfd">                ++optind;
+                if (optind &lt; argc - postpone_count) {
+                    optarg = argv[optind];
+                } else {
+                    optopt = c;
+                    if (opterr) {
+                        fprintf(stderr,</span>
+                            "%s: option requires an argument -- %c\n",
+                            argv[0], c);
+                    }
+<span style = "background-color:#dfd">                    if (optstring[0] == ':' ||</span>
+                        (optstring[0] == '-' || optstring[0] == '+') &amp;&amp;
+                        optstring[1] == ':') {
+<span style = "background-color:#fdd">                        c = ':';
+                    } else {</span>
+<span style = "background-color:#dfd">                        c = '?';</span>
+                    }
+                }
+            }
+<span style = "background-color:#dfd">            ++optind;
+            nextchar = 0;</span>
+        }
+<span style = "background-color:#dfd">        return c;</span>
+<span style = "background-color:#fdd">    }</span>
+
+    /* end of option analysis */
+
+    /* fix the order of non-opt params to original */
+<span style = "background-color:#dfd">    while ((argc - optind - postpone_count) &gt; 0) {</span>
+<span style = "background-color:#fdd">        postpone(argc, argv, optind);
+        ++postpone_count;
+    }</span>
+
+<span style = "background-color:#dfd">    nextchar = 0;
+    postpone_count = 0;
+    return -1;
+}</span>
+
+int getopt(int argc, char* const argv[],
+<span style = "background-color:#dfd">            const char* optstring) {
+    return _getopt_(argc, argv, optstring, 0, 0);
+}</span>
+int getopt_long(int argc, char* const argv[],
+        const char* optstring,
+<span style = "background-color:#fdd">        const struct option* longopts, int* longindex) {
+    return _getopt_(argc, argv, optstring, longopts, longindex);
+}</span>
+/********************************************************
+int getopt_long_only(int argc, char* const argv[],
+        const char* optstring,
+        const struct option* longopts, int* longindex)
+{
+    return -1;
+}
+********************************************************/
+</pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

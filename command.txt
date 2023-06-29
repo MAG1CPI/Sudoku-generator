@@ -1,0 +1,1 @@
+g++ -I .\include .\src\*.cc -o .\bin\sudoku.exe -fexec-charset=GBK

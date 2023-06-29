@@ -98,12 +98,3 @@ void SudokuBoard::output() {
         std::cout << kSeparation << "board[" << k + 1 << "]\n";
     }
 }
-
-void SudokuBoard::print_board(const Board& board) {
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            std::cout << board[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
-}

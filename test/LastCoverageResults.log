@@ -1,0 +1,55 @@
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\all.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\c-50.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\c-b1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\c-b2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\c-b3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\e-b.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\m-b1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\m-b2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\m-b3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\m-b4.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-m-1-u.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-m-1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-m-2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-m-3-r-25-50.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-m-3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50-r-25-50.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-50.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-b1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-b2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\n-b3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b4.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b5.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b6.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b7.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\r-b8.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b0.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b1.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b2.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b3.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b4.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b5.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\s-b6.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\sd.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\sr.cov
+[2023-06-29 13:27:55] [info] Load coverage file: C:/CODE/Sudoku-generator/test/cov\u-b.cov
+[2023-06-29 13:27:55] [info] Start Program:
+Modules: Selected: * Excluded: 
+Sources: Selected: * Excluded: 
+Log Level: Normal
+Cover Children: 0
+Aggregate by file: 1
+Continue after C++ exception: 0
+Optimized build support: 0
+Export: html coverage_result 
+Input coverage: C:/CODE/Sudoku-generator/test/cov\all.cov C:/CODE/Sudoku-generator/test/cov\c-50.cov C:/CODE/Sudoku-generator/test/cov\c-b1.cov C:/CODE/Sudoku-generator/test/cov\c-b2.cov C:/CODE/Sudoku-generator/test/cov\c-b3.cov C:/CODE/Sudoku-generator/test/cov\e-b.cov C:/CODE/Sudoku-generator/test/cov\m-b1.cov C:/CODE/Sudoku-generator/test/cov\m-b2.cov C:/CODE/Sudoku-generator/test/cov\m-b3.cov C:/CODE/Sudoku-generator/test/cov\m-b4.cov C:/CODE/Sudoku-generator/test/cov\n-50-m-1-u.cov C:/CODE/Sudoku-generator/test/cov\n-50-m-1.cov C:/CODE/Sudoku-generator/test/cov\n-50-m-2.cov C:/CODE/Sudoku-generator/test/cov\n-50-m-3-r-25-50.cov C:/CODE/Sudoku-generator/test/cov\n-50-m-3.cov C:/CODE/Sudoku-generator/test/cov\n-50-r-25-50.cov C:/CODE/Sudoku-generator/test/cov\n-50.cov C:/CODE/Sudoku-generator/test/cov\n-b1.cov C:/CODE/Sudoku-generator/test/cov\n-b2.cov C:/CODE/Sudoku-generator/test/cov\n-b3.cov C:/CODE/Sudoku-generator/test/cov\r-b1.cov C:/CODE/Sudoku-generator/test/cov\r-b2.cov C:/CODE/Sudoku-generator/test/cov\r-b3.cov C:/CODE/Sudoku-generator/test/cov\r-b4.cov C:/CODE/Sudoku-generator/test/cov\r-b5.cov C:/CODE/Sudoku-generator/test/cov\r-b6.cov C:/CODE/Sudoku-generator/test/cov\r-b7.cov C:/CODE/Sudoku-generator/test/cov\r-b8.cov C:/CODE/Sudoku-generator/test/cov\s-b0.cov C:/CODE/Sudoku-generator/test/cov\s-b1.cov C:/CODE/Sudoku-generator/test/cov\s-b2.cov C:/CODE/Sudoku-generator/test/cov\s-b3.cov C:/CODE/Sudoku-generator/test/cov\s-b4.cov C:/CODE/Sudoku-generator/test/cov\s-b5.cov C:/CODE/Sudoku-generator/test/cov\s-b6.cov C:/CODE/Sudoku-generator/test/cov\sd.cov C:/CODE/Sudoku-generator/test/cov\sr.cov C:/CODE/Sudoku-generator/test/cov\u-b.cov 
+Unified diff: 
+Excluded line regular expressions: 
+Substitute pdb source paths: 
+[2023-06-29 13:27:55] [info] ----------------------------------------------------
+[2023-06-29 13:27:55] [info] Coverage generated in Folder C:\CODE\Sudoku-generator\test\coverage_result
+[2023-06-29 13:27:55] [info] ----------------------------------------------------
+[2023-06-29 13:27:55] [info] The code coverage report is not what you expect? See the FAQ https://github.com/OpenCppCoverage/OpenCppCoverage/wiki/FAQ.

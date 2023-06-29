@@ -1,0 +1,7 @@
+﻿  command.cc
+  sudoku.cc
+  sudoku_board.cc
+C:\CODE\Sudoku-generator\test\sudoku\sudoku\src\sudoku_board.cc(76,23): warning C4018: “<”: 有符号/无符号不匹配
+C:\CODE\Sudoku-generator\test\sudoku\sudoku\src\sudoku_board.cc(91,23): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
+  sudoku.vcxproj -> C:\CODE\Sudoku-generator\test\sudoku\Debug\sudoku.exe

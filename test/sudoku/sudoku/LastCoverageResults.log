@@ -1,0 +1,21 @@
+[2023-06-29 12:10:00] [info] Start Program:
+Path:"C:\\Users\\29479\\source\\repos\\sudoku\\Debug\\sudoku.exe"
+Arguments:-c 100 
+Working directory: "C:\\Users\\29479\\source\\repos\\sudoku\\sudoku\\"
+Modules: Selected: C:\Users\29479\source\repos\sudoku\Debug\sudoku.exe Excluded: 
+Sources: Selected: C:\Users\29479\source\repos\sudoku\sudoku Excluded: 
+Log Level: Normal
+Cover Children: 0
+Aggregate by file: 1
+Continue after C++ exception: 0
+Optimized build support: 0
+Export: binary C:\Users\29479\AppData\Local\Temp\rkqqarzk.ht1 
+Input coverage: 
+Unified diff: 
+Excluded line regular expressions: 
+Substitute pdb source paths: 
+
+[2023-06-29 12:10:00] [info] Module: C:\Users\29479\source\repos\sudoku\Debug\sudoku.exe is selected because it matches selected pattern: C:\Users\29479\source\repos\sudoku\Debug\sudoku.exe
+[2023-06-29 12:10:01] [info] ----------------------------------------------------
+[2023-06-29 12:10:01] [info] Coverage binary generated in file: C:\Users\29479\AppData\Local\Temp\rkqqarzk.ht1
+[2023-06-29 12:10:01] [info] ----------------------------------------------------

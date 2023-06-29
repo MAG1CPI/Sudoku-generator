@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>command.cc</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+ï»¿// Copyright 2023 MAG1CPI
+#include &lt;string.h&gt;
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include "../include/command.h"
+#include "../include/getopt.h"
+#include "../include/sudoku.h"
+
+<span style = "background-color:#dfd">bool is_number(const std::string&amp; s) {
+    return std::all_of(s.begin(), s.end(), [](char c) { return isdigit(c) != 0; });
+}</span>
+
+<span style = "background-color:#dfd">Command::Command() {
+    is_create = false;
+    is_solve = false;
+    is_generate = false;</span>
+
+<span style = "background-color:#dfd">    endgame_num = 0;
+    game_num = 0;</span>
+    // é¢å¤éé¡¹çåå§å
+<span style = "background-color:#dfd">    game_level = -1;
+    min_hole_num = -1;
+    max_hole_num = -1;
+    is_unique = false;
+}</span>
+
+<span style = "background-color:#dfd">Command::~Command() {
+}</span>
+
+<span style = "background-color:#dfd">int Command::parse_arg(int argc, char* argv[]) {
+    char opt = 0;
+    int mask_mru = 0;  // |u|r|m|
+    char *pTmp = NULL;
+    while ((opt = getopt(argc, argv, "c:s:n:m:r:u")) != -1) {
+        switch (opt) {</span>
+            case 'c':
+<span style = "background-color:#dfd">                is_create = true;
+                endgame_num = atoi(optarg);
+                if (is_number(optarg) == false || endgame_num &lt; 1 || endgame_num &gt; 1000000) {
+                    std::cout &lt;&lt; "éé¡¹ -c çææ°ç¬ç»çæ°éçåæ°å¯éå¼ä¸º 1~1000000 ! è¯·è¾å¥ä¸ä¸ªåæ³å¼!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                break;</span>
+            case 's':
+<span style = "background-color:#dfd">                is_solve = true;
+                game_path = optarg;</span>
+                // æä»¶æ¯å¦å¯è¯»çæ£æ¥å¨solveéå¤ç
+<span style = "background-color:#dfd">                break;</span>
+            case 'n':
+<span style = "background-color:#dfd">                is_generate = true;
+                game_num = atoi(optarg);
+                if (is_number(optarg) == false || game_num &lt; 1 || game_num &gt; 10000) {
+                    std::cout &lt;&lt; "éé¡¹ -n çææ°ç¬æ¸¸ææ°éçåæ°å¯éå¼ä¸º 1~10000 ! è¯·è¾å¥ä¸ä¸ªåæ³å¼!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                break;</span>
+            case 'm':
+<span style = "background-color:#dfd">                mask_mru |= 0x01;
+                game_level = atoi(optarg);
+                if (is_number(optarg) == false || game_level &lt; 1 || game_level &gt; 3) {
+                    std::cout &lt;&lt; "éé¡¹ -m æ¸¸æé¾åº¦çåæ°å¯éå¼ä¸º 1~3 ! è¯·è¾å¥ä¸ä¸ªåæ³å¼!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                break;</span>
+            case 'r':
+<span style = "background-color:#dfd">                mask_mru |= 0x02;</span>
+                char* str;
+<span style = "background-color:#dfd">                str = strtok_s(optarg, "~", &amp;pTmp);
+                if (str == NULL || is_number(str) == false) {
+                    std::cout &lt;&lt; "éé¡¹ -r æç©ºèå´éè¦ä¸ä¸ªèå´åæ°(eg: 20~55)!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                min_hole_num = atoi(str);</span>
+
+<span style = "background-color:#dfd">                str = strtok_s(NULL, "~", &amp;pTmp);
+                if (str == NULL || is_number(str) == false) {
+                    std::cout &lt;&lt; "éé¡¹ -r æç©ºèå´éè¦ä¸ä¸ªèå´åæ°(eg: 20~55)!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                max_hole_num = atoi(str);</span>
+
+<span style = "background-color:#dfd">                str = strtok_s(NULL, "~", &amp;pTmp);
+                if (str) {
+                    std::cout &lt;&lt; "éé¡¹ -r æç©ºèå´éè¦ä¸ä¸ªèå´åæ°(eg: 20~55)!\n";
+                    return -1;</span>
+                }
+
+<span style = "background-color:#dfd">                if (min_hole_num &gt; max_hole_num) {
+                    std::cout &lt;&lt; "è¯·è¾å¥åæ³èå´!\n";
+                    return -1;
+                } else if (min_hole_num &lt; 20 || max_hole_num &gt; 55) {
+                    std::cout &lt;&lt; "æç©ºæ°éå¯éèå´ä¸º 20~55 ! è¯·è¾å¥ä¸ä¸ªåæ³åæ°å¼!\n";
+                    return -1;</span>
+                }
+<span style = "background-color:#dfd">                break;</span>
+            case 'u':
+<span style = "background-color:#dfd">                mask_mru |= 0x04;
+                is_unique = true;
+                break;</span>
+            default:
+<span style = "background-color:#dfd">                std::cout &lt;&lt; "éé¡¹éè¯¯ï¼è¯·è¾å¥åæ³éé¡¹!\n";
+                return -1;</span>
+        }
+<span style = "background-color:#dfd">    }
+    if (optind &lt; argc) {</span>
+<span style = "background-color:#fdd">        std::cout &lt;&lt; "åæ°éè¯¯ï¼è¯·è¾å¥åæ³åæ°!\n";
+        return -1;</span>
+    }
+
+<span style = "background-color:#dfd">    if (is_generate == false &amp;&amp; mask_mru) {
+        std::cout &lt;&lt; "éé¡¹ -m , -r , -u å¿é¡»åéé¡¹ -n ä¸åä½¿ç¨!\n";
+        return -1;
+    } else if (mask_mru &amp; (mask_mru &gt;&gt; 1)) {
+        std::cout &lt;&lt; "éé¡¹ -m åéé¡¹ -r åæ¶åºç°ï¼ä»¥ -m ä¸ºä¸»!\n";</span>
+    }
+
+<span style = "background-color:#dfd">    return 0;
+}</span>
+
+<span style = "background-color:#dfd">void Command::handle() {
+    if (is_create) {
+        std::cout &lt;&lt; "\n--------çæç»å±--------\n";
+        Sudoku sudoku;
+        sudoku.gen_endgames(endgame_num);
+        sudoku.save_games("./endgame.txt");
+    }
+    if (is_solve) {
+        std::cout &lt;&lt; "\n--------æ±è§£æ°ç¬--------\n";
+        Sudoku sudoku;
+        sudoku.solve_games_and_save_results(game_path);
+    }
+    if (is_generate) {
+        std::cout &lt;&lt; "\n--------çææ°ç¬--------\n";
+        Sudoku sudoku;
+        sudoku.gen_games(game_num, game_level, min_hole_num, max_hole_num, is_unique);
+        sudoku.save_games("./game.txt");
+    }
+}</span>
+
+<span style = "background-color:#dfd">void Command::output() {
+    std::cout &lt;&lt; "----------è®¾ç½®----------\n";
+    if (is_create) {
+        std::cout &lt;&lt; "åå»º" &lt;&lt; endgame_num &lt;&lt; "ä¸ªç»å±\n\n";</span>
+    }
+<span style = "background-color:#dfd">    if (is_solve) {
+        std::cout &lt;&lt; "æ±è§£è·¯å¾ä¸º\"" &lt;&lt; game_path &lt;&lt; "\"çæä»¶ä¸­çæ°ç¬æ¸¸æ\n\n";</span>
+    }
+<span style = "background-color:#dfd">    if (is_generate) {
+        std::cout &lt;&lt; "åå»º" &lt;&lt; game_num &lt;&lt; "ä¸ªæ°ç¬æ¸¸æ\n";
+        if (game_level != -1) {
+            std::cout &lt;&lt; "æ¸¸æé¾åº¦ä¸º: " &lt;&lt; game_level &lt;&lt; std::endl;</span>
+        }
+<span style = "background-color:#dfd">        if (min_hole_num != -1) {
+            std::cout &lt;&lt; "æç©ºæ°éä¸º: " &lt;&lt; min_hole_num &lt;&lt; " ~ " &lt;&lt; max_hole_num &lt;&lt; std::endl;</span>
+        }
+<span style = "background-color:#dfd">        if (is_unique) {
+            std::cout &lt;&lt; "æ¸¸æçè§£å¯ä¸" &lt;&lt; std::endl;</span>
+        }
+<span style = "background-color:#dfd">        std::cout &lt;&lt; std::endl;</span>
+    }
+<span style = "background-color:#dfd">}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

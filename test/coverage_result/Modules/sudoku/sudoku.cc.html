@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>sudoku.cc</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+ï»¿// Copyright 2023 MAG1CPI
+
+#define _CRT_RAND_S
+
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+#include "../include/sudoku.h"
+
+<span style = "background-color:#dfd">Sudoku::Sudoku() {
+    memset(&amp;state, 0, sizeof(state));
+}</span>
+
+<span style = "background-color:#dfd">Sudoku::~Sudoku() {
+}</span>
+
+<span style = "background-color:#dfd">int Sudoku::gen_endgames(int num) {
+    for (int i = 0; i &lt; num; i++) {
+        Board board(9, std::vector&lt;char&gt;(9, '$'));
+        gen_endgame(&amp;board);
+        games.boards.push_back(board);
+    }
+    games.output();
+    return 0;
+}</span>
+
+<span style = "background-color:#dfd">int Sudoku::gen_games(int num, int level, int min_hole_num, int max_hole_num, bool is_unique) {
+    set_hole_num_range(level, &amp;min_hole_num, &amp;max_hole_num);
+    while (num &gt; 0) {
+        Board board(9, std::vector&lt;char&gt;(9, '$'));
+        gen_endgame(&amp;board);</span>
+
+        // ææ´
+        unsigned int r;
+<span style = "background-color:#dfd">        rand_s(&amp;r);
+        int hole = min_hole_num + r % (max_hole_num - min_hole_num + 1);
+        if (dig_hole(&amp;board, hole, is_unique) == false) {
+            continue;</span>
+        }
+
+<span style = "background-color:#dfd">        games.boards.push_back(board);
+        num--;
+    }
+    games.output();
+    return 0;
+}</span>
+
+<span style = "background-color:#dfd">int Sudoku::solve_games_and_save_results(std::string path) {
+    games.load(path);
+    games.output();
+    int i = 1;
+    for (Board board : games.boards) {
+        solve_game(&amp;board, false);</span>
+
+<span style = "background-color:#dfd">        std::string file_name = "board" + std::to_string(i) + "'s results.txt";
+        result.save(file_name);</span>
+
+<span style = "background-color:#dfd">        std::cout &lt;&lt; "----result of board[" &lt;&lt; i &lt;&lt; "]----\n";
+        result.output();
+        i++;
+    }</span>
+    // games.output();
+<span style = "background-color:#dfd">    return 0;
+}</span>
+
+<span style = "background-color:#dfd">int Sudoku::save_games(std::string path) {
+    return games.save(path);
+}</span>
+
+<span style = "background-color:#dfd">void Sudoku::gen_endgame(Board* board) {</span>
+    char row[9];
+<span style = "background-color:#dfd">    random_row_permutation(row);
+    for (int i = 0; i &lt; 3; i++) {
+        (*board)[3][i + 3] = row[i] + '1';
+        (*board)[4][i + 3] = row[i + 3] + '1';
+        (*board)[5][i + 3] = row[i + 6] + '1';
+    }
+    row_col_extend(board, 3, 3, true);
+    row_col_extend(board, 3, 3, false);
+    row_col_extend(board, 3, 0, false);
+    row_col_extend(board, 3, 6, false);
+}</span>
+
+<span style = "background-color:#dfd">void Sudoku::random_row_permutation(char* row) {
+    int i = 0;
+    int mask = 0;
+    while (i &lt; 9) {</span>
+        unsigned int r;
+<span style = "background-color:#dfd">        rand_s(&amp;r);
+        int num = r % 9;
+        if ((1 &lt;&lt; num) &amp; mask) {
+            continue;</span>
+<span style = "background-color:#fdd">        } else {</span>
+<span style = "background-color:#dfd">            row[i++] = num;
+            mask |= (1 &lt;&lt; num);</span>
+        }
+<span style = "background-color:#dfd">    }
+}</span>
+
+<span style = "background-color:#dfd">void Sudoku::row_col_extend(Board* board, int x, int y, int is_row) {
+    int order1[3] = {1, 2, 0};
+    int order2[3] = {2, 0, 1};</span>
+    unsigned int r;
+<span style = "background-color:#dfd">    rand_s(&amp;r);
+    if (r % 2) {
+        std::swap(order1, order2);</span>
+    }
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 3; i++) {
+        if (is_row) {
+            (*board)[x][i] = (*board)[x + order1[0]][y + i];
+            (*board)[x + 1][i] = (*board)[x + order1[1]][y + i];
+            (*board)[x + 2][i] = (*board)[x + order1[2]][y + i];
+            (*board)[x][i + 6] = (*board)[x + order2[0]][y + i];
+            (*board)[x + 1][i + 6] = (*board)[x + order2[1]][y + i];
+            (*board)[x + 2][i + 6] = (*board)[x + order2[2]][y + i];
+        } else {
+            (*board)[i][y] = (*board)[x + i][y + order1[0]];
+            (*board)[i][y + 1] = (*board)[x + i][y + order1[1]];
+            (*board)[i][y + 2] = (*board)[x + i][y + order1[2]];
+            (*board)[i + 6][y] = (*board)[x + i][y + order2[0]];
+            (*board)[i + 6][y + 1] = (*board)[x + i][y + order2[1]];
+            (*board)[i + 6][y + 2] = (*board)[x + i][y + order2[2]];</span>
+        }
+<span style = "background-color:#dfd">    }
+}</span>
+
+<span style = "background-color:#dfd">bool Sudoku::solve_game(Board* board, bool is_unique) {
+    init_state(board);
+    return solve_by_dfs(board, 0, is_unique);
+}</span>
+
+<span style = "background-color:#dfd">void Sudoku::init_state(Board* board) {
+    memset(&amp;state, 0, sizeof(state));
+    blanks.clear();
+    result.boards.clear();</span>
+
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 9; i++) {
+        for (int j = 0; j &lt; 9; j++) {
+            if ((*board)[i][j] == '$') {
+                blanks.push_back(std::pair&lt;int, int&gt;(i, j));
+            } else {
+                int n = (*board)[i][j] - '1';
+                state.flip(i, j, n);</span>
+            }
+<span style = "background-color:#dfd">        }
+    }
+}</span>
+
+<span style = "background-color:#dfd">bool Sudoku::solve_by_dfs(Board* board, int i, bool is_unique) {
+    if (i == blanks.size()) {
+        result.boards.push_back(*board);
+        if (is_unique &amp;&amp; result.boards.size() &gt; 1) {
+            return false;</span>
+<span style = "background-color:#fdd">        } else {</span>
+<span style = "background-color:#dfd">            return true;</span>
+        }
+    }
+
+<span style = "background-color:#dfd">    int x = blanks[i].first, y = blanks[i].second;</span>
+
+<span style = "background-color:#dfd">    int mask = state.row[x] | state.col[y] | state.block[(x / 3) * 3 + y / 3];</span>
+
+<span style = "background-color:#dfd">    for (int num = 0; num &lt; 9; num++) {
+        if ((mask &amp; (1 &lt;&lt; num)) == 0) {
+            state.flip(x, y, num);
+            (*board)[x][y] = num + '1';
+            if (solve_by_dfs(board, i + 1, is_unique) == false) {
+                state.flip(x, y, num);
+                (*board)[x][y] = '$';
+                return false;</span>
+            }
+<span style = "background-color:#dfd">            state.flip(x, y, num);</span>
+        }
+<span style = "background-color:#dfd">    }
+    (*board)[x][y] = '$';
+    return true;
+}</span>
+
+<span style = "background-color:#dfd">void Sudoku::set_hole_num_range(int level, int* min_hole_num, int* max_hole_num) {
+    if (level != -1) {  // å­å¨ -m éé¡¹åä»¥ -m éé¡¹ä¸ºä¸»
+        switch (level) {</span>
+            case 1:
+<span style = "background-color:#dfd">                *min_hole_num = 20;
+                *max_hole_num = 30;
+                break;</span>
+            case 2:
+<span style = "background-color:#dfd">                *min_hole_num = 30;
+                *max_hole_num = 40;
+                break;</span>
+            case 3:
+<span style = "background-color:#dfd">                *min_hole_num = 40;
+                *max_hole_num = 55;
+                break;</span>
+            default:
+<span style = "background-color:#fdd">                *min_hole_num = 20;
+                *max_hole_num = 55;</span>
+                break;
+        }
+<span style = "background-color:#dfd">    } else if (*min_hole_num == -1) {  // æ¢æ²¡æ -m éé¡¹ä¹æ²¡æ -r éé¡¹åå®å¨éæºææ´
+        *min_hole_num = 20;
+        *max_hole_num = 55;</span>
+    }
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">bool Sudoku::dig_hole(Board* board, int hole_num, bool is_unique) {
+    int count = 0;  // è®°å½éè¯¯æ¬¡æ°ï¼è¿é«åéæ°çæåºç¡å¾
+    while (hole_num &gt; 0) {</span>
+        unsigned int r;
+<span style = "background-color:#dfd">        rand_s(&amp;r);
+        int x = r % 9;
+        rand_s(&amp;r);
+        int y = r % 9;
+        if ((*board)[x][y] == '$')
+            continue;
+        char temp = (*board)[x][y];
+        (*board)[x][y] = '$';
+        if (is_unique) {
+            if (solve_game(board, is_unique) == true &amp;&amp; result.boards.size() == 1) {
+                hole_num--;
+                count = 0;
+            } else {
+                (*board)[x][y] = temp;
+                if (count++ &gt; 20) {
+                    return false;</span>
+                }
+            }
+<span style = "background-color:#dfd">        } else {
+            hole_num--;</span>
+        }
+<span style = "background-color:#dfd">    }
+    return true;
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>
