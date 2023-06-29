@@ -1,0 +1,47 @@
+# 正常样例
+sudoku.exe -c 50
+sudoku.exe -n 50
+sudoku.exe -n 50 -m 1
+sudoku.exe -n 50 -m 2
+sudoku.exe -n 50 -m 3
+sudoku.exe -n 50 -r 25~50
+sudoku.exe -n 50 -m 3 -r 25~50
+sudoku.exe -n 50 -m 3 -u
+sudoku.exe -s C:\CODE\Sudoku-generator\test\board_1.txt
+sudoku.exe -s .\board_1.txt
+sudoku.exe -c 50 -n 50 -m 3 -r 25~50 -s .\board_1.txt -u
+
+
+# 错误样例
+sudoku.exe -t a
+
+sudoku.exe -c
+sudoku.exe -c 50a
+sudoku.exe -c 1000001
+
+sudoku.exe -n
+sudoku.exe -n 50a
+sudoku.exe -n 1000001
+sudoku.exe -n 50 -m
+sudoku.exe -n 50 -m a
+sudoku.exe -n 50 -m 4
+sudoku.exe -m 1
+
+sudoku.exe -n 50 -r
+sudoku.exe -n 50 -r 10~50
+sudoku.exe -n 50 -r 25~20
+sudoku.exe -n 50 -r ~
+sudoku.exe -n 50 -r 25
+sudoku.exe -n 50 -r 25~30~40
+sudoku.exe -n 50 -r 25a~30
+sudoku.exe -r 25~50
+
+sudoku.exe -u
+
+sudoku.exe -s .\board_0.txt
+sudoku.exe -s .\bad_board_1.txt
+sudoku.exe -s .\bad_board_2.txt
+sudoku.exe -s .\bad_board_3.txt
+sudoku.exe -s .\bad_board_4.txt
+sudoku.exe -s .\bad_board_5.txt
+sudoku.exe -s .\bad_board_6.txt
