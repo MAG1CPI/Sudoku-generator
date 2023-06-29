@@ -37,3 +37,6 @@ task-requirements.md
 /picture/*.drawio
 /.vscode/c_cpp_properties.json
 /.vscode/settings.json
+endgame.txt
+game.txt
+report.txt
