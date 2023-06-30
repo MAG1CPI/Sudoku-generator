@@ -1,44 +1,83 @@
 # 正常样例
+
+## 生成50个数独终局
 sudoku.exe -c 50
+
+## 生成50个数独问题
 sudoku.exe -n 50
+
+## 生成50个难度为1的数独问题
 sudoku.exe -n 50 -m 1
+## 生成50个难度为2的数独问题
 sudoku.exe -n 50 -m 2
+## 生成50个难度为3的数独问题
 sudoku.exe -n 50 -m 3
+
+## 生成50个挖空在25个到50个的数独问题
 sudoku.exe -n 50 -r 25~50
+## 提示 -m 选项覆盖了 -r 选项，生成50个难度为3的数独问题
 sudoku.exe -n 50 -m 3 -r 25~50
+
+## 生成50个难度为3且具有唯一解的问题
 sudoku.exe -n 50 -m 3 -u
+
+## 从绝对地址中读取文件并求解
 sudoku.exe -s C:\CODE\Sudoku-generator\test\board_1.txt
+## 从相对地址中读取文件并求解
 sudoku.exe -s .\board_1.txt
+
+## 提示 -m 选项覆盖了 -r 选项，生成50个数独终局、生成50个难度为3且具有唯一解的数独问题、从相对地址中读取文件并求解
 sudoku.exe -c 50 -n 50 -m 3 -r 25~50 -s .\board_1.txt -u
 
 
 # 错误样例
+
+## 参数错误
 sudoku.exe -t a
 
+## -c 缺少参数
 sudoku.exe -c
+## -c 参数类型错误，包括了非数字
 sudoku.exe -c 50a
+## -c 参数值越界
 sudoku.exe -c 1000001
 
+## -n 缺少参数
 sudoku.exe -n
+## -n 参数类型错误，包括了非数字
 sudoku.exe -n 50a
+## -n 参数值越界
 sudoku.exe -n 1000001
+
+
+## -m 缺少参数
 sudoku.exe -n 50 -m
+## -m 参数类型错误，包括了非数字
 sudoku.exe -n 50 -m a
+## -m 参数值越界
 sudoku.exe -n 50 -m 4
+## -m 未与 -n 配合使用
 sudoku.exe -m 1
 
+## -r 缺少参数
 sudoku.exe -n 50 -r
+## -r 参数值越界
 sudoku.exe -n 50 -r 10~50
+## -r 参数值不符合规则：最小值大于最大值、不是范围、包括了非数字
 sudoku.exe -n 50 -r 25~20
 sudoku.exe -n 50 -r ~
 sudoku.exe -n 50 -r 25
 sudoku.exe -n 50 -r 25~30~40
 sudoku.exe -n 50 -r 25a~30
+## -r 未与 -n 配合使用
 sudoku.exe -r 25~50
 
+## -u 未与 -n 配合使用
 sudoku.exe -u
 
+## 读取不存在的文件
 sudoku.exe -s .\board_0.txt
+## 文件不合规
 sudoku.exe -s .\bad_board_1.txt
 sudoku.exe -s .\bad_board_2.txt
 sudoku.exe -s .\bad_board_3.txt
